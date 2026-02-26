@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Notion Date Widget</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: transparent;
+      font-family: 'Helvetica Neue', sans-serif;
+      color: #37352f;
+    }
+    .widget { text-align: center; line-height: 1.8; }
+    .day  { font-size: 1rem; color: #9b9a97; letter-spacing: 0.15em; text-transform: uppercase; }
+    .date { font-size: 1.7rem; font-weight: 700; margin: 4px 0; letter-spacing: 0.04em; }
+    .time { font-size: 2.6rem; font-weight: 300; letter-spacing: 0.1em; }
+  </style>
+</head>
+<body>
+  <div class="widget">
+    <div class="day"  id="day"></div>
+    <div class="date" id="date"></div>
+    <div class="time" id="time"></div>
+  </div>
+  <script>
+    const days = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+    function update() {
+      const now = new Date();
+      const y   = now.getFullYear();
+      const m   = String(now.getMonth()+1).padStart(2,'0');
+      const d   = String(now.getDate()).padStart(2,'0');
+      const h   = String(now.getHours()).padStart(2,'0');
+      const min = String(now.getMinutes()).padStart(2,'0');
+      const s   = String(now.getSeconds()).padStart(2,'0');
+      document.getElementById('day').innerText  = days[now.getDay()];
+      document.getElementById('date').innerText = `${y} / ${m} / ${d}`;
+      document.getElementById('time').innerText = `${h} : ${min} : ${s}`;
+      setTimeout(update, 1000);
+    }
+    update();
+  </script>
+</body>
+</html>
