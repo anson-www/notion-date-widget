@@ -1,47 +1,241 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <title>Notion Date Widget</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notion Date Widget 設定產生器</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
+      font-family: 'Helvetica Neue', 'PingFang TC', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      background: transparent;
-      font-family: 'Helvetica Neue', sans-serif;
-      color: #37352f;
     }
-    .widget { text-align: center; line-height: 1.8; }
-    .day  { font-size: 1rem; color: #9b9a97; letter-spacing: 0.15em; text-transform: uppercase; }
-    .date { font-size: 1.7rem; font-weight: 700; margin: 4px 0; letter-spacing: 0.04em; }
-    .time { font-size: 2.6rem; font-weight: 300; letter-spacing: 0.1em; }
+    .container {
+      max-width: 900px;
+      width: 100%;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      padding: 50px;
+    }
+    h1 {
+      font-size: 2.2rem;
+      color: #2d3748;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+    .subtitle {
+      color: #718096;
+      margin-bottom: 40px;
+      font-size: 1rem;
+    }
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 768px) {
+      .split { grid-template-columns: 1fr; gap: 30px; }
+    }
+    .section {
+      background: #f7fafc;
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .option {
+      margin-bottom: 16px;
+    }
+    .option:last-child { margin-bottom: 0; }
+    .option label {
+      display: flex;
+      align-items: center;
+      font-size: 0.95rem;
+      color: #4a5568;
+      cursor: pointer;
+      user-select: none;
+    }
+    .option input[type="checkbox"],
+    .option input[type="radio"] {
+      margin-right: 10px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .preview-box {
+      background: #f7fafc;
+      border: 2px dashed #cbd5e0;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 30px;
+      min-height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .preview-box iframe {
+      width: 100%;
+      height: 180px;
+      border: none;
+      border-radius: 8px;
+    }
+    .output-box {
+      background: #2d3748;
+      color: #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 0.9rem;
+      word-break: break-all;
+      position: relative;
+      margin-top: 20px;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover {
+      background: #5568d3;
+      transform: translateY(-1px);
+    }
+    .copy-btn:active {
+      transform: translateY(0);
+    }
+    .copy-btn.copied {
+      background: #48bb78;
+    }
   </style>
 </head>
 <body>
-  <div class="widget">
-    <div class="day"  id="day"></div>
-    <div class="date" id="date"></div>
-    <div class="time" id="time"></div>
+  <div class="container">
+    <h1>🗓️ Notion Date Widget 設定產生器</h1>
+    <p class="subtitle">自訂您的日期時鐘小工具，輕鬆嵌入 Notion 頁面</p>
+
+    <div class="section-title">⚙️ Widget 設定</div>
+    <div class="split">
+      <div class="section">
+        <div class="section-title">顯示內容</div>
+        <div class="option">
+          <label><input type="checkbox" id="showTime" checked> 顯示時鐘</label>
+        </div>
+        <div class="option">
+          <label><input type="checkbox" id="showWeekNum" checked> 顯示週數</label>
+        </div>
+        <div class="option">
+          <label><input type="checkbox" id="showWeek" checked> 顯示星期幾（於週數後方）</label>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">外觀設定</div>
+        <div class="radio-group">
+          <div class="option">
+            <label><input type="radio" name="theme" value="auto" checked> 自動（跟隨系統）</label>
+          </div>
+          <div class="option">
+            <label><input type="radio" name="theme" value="light"> 淺色模式</label>
+          </div>
+          <div class="option">
+            <label><input type="radio" name="theme" value="dark"> 深色模式</label>
+          </div>
+        </div>
+        <br>
+        <div class="section-title">日期格式</div>
+        <div class="radio-group">
+          <div class="option">
+            <label><input type="radio" name="datestyle" value="ymd" checked> 2026 . 02 . 26</label>
+          </div>
+          <div class="option">
+            <label><input type="radio" name="datestyle" value="slash"> 2026 / 02 / 26</label>
+          </div>
+          <div class="option">
+            <label><input type="radio" name="datestyle" value="mdy"> Feb 26, 2026</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">📱 即時預覽</div>
+    <div class="preview-box">
+      <iframe id="preview"></iframe>
+    </div>
+
+    <div class="section-title">🔗 嵌入連結</div>
+    <div class="output-box">
+      <button class="copy-btn" onclick="copyURL()">複製連結</button>
+      <code id="output"></code>
+    </div>
   </div>
+
   <script>
-    const days = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
-    function update() {
-      const now = new Date();
-      const y   = now.getFullYear();
-      const m   = String(now.getMonth()+1).padStart(2,'0');
-      const d   = String(now.getDate()).padStart(2,'0');
-      const h   = String(now.getHours()).padStart(2,'0');
-      const min = String(now.getMinutes()).padStart(2,'0');
-      const s   = String(now.getSeconds()).padStart(2,'0');
-      document.getElementById('day').innerText  = days[now.getDay()];
-      document.getElementById('date').innerText = `${y} / ${m} / ${d}`;
-      document.getElementById('time').innerText = `${h} : ${min} : ${s}`;
-      setTimeout(update, 1000);
+    const baseURL = 'https://anson-www.github.io/notion-date-widget/widget.html';
+
+    function updatePreview() {
+      const theme = document.querySelector('input[name="theme"]:checked').value;
+      const datestyle = document.querySelector('input[name="datestyle"]:checked').value;
+      const showTime = document.getElementById('showTime').checked;
+      const showWeekNum = document.getElementById('showWeekNum').checked;
+      const showWeek = document.getElementById('showWeek').checked;
+
+      const params = new URLSearchParams();
+      params.set('theme', theme);
+      params.set('datestyle', datestyle);
+      if (!showTime) params.set('time', 'false');
+      if (!showWeekNum) params.set('weeknum', 'false');
+      if (!showWeek) params.set('week', 'false');
+
+      const url = `${baseURL}?${params.toString()}`;
+      document.getElementById('preview').src = url;
+      document.getElementById('output').innerText = url;
     }
-    update();
+
+    function copyURL() {
+      const url = document.getElementById('output').innerText;
+      navigator.clipboard.writeText(url).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.innerText = '✓ 已複製！';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.innerText = '複製連結';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('change', updatePreview);
+    });
+
+    updatePreview();
   </script>
 </body>
 </html>
