@@ -152,6 +152,9 @@
         </div>
         <div class="option">
           <label><input type="checkbox" id="showWeek" checked> 顯示星期幾（於週數後方）</label>
+                          <div class="option">
+                    <label><input type="checkbox" id="showDate" checked> 顯示日期</label>
+                </div>
         </div>
       </div>
 
@@ -168,6 +171,23 @@
             <label><input type="radio" name="theme" value="dark"> 深色模式</label>
           </div>
         </div>
+        
+            <div class="section">
+                <div class="section-title">時區選擇</div>
+                <div class="option">
+                    <select id="timezone" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
+                        <option value="local">本地時區</option>
+                        <option value="Asia/Taipei">亞洲/台北 (UTC+8)</option>
+                        <option value="Asia/Tokyo">亞洲/東京 (UTC+9)</option>
+                        <option value="Asia/Shanghai">亞洲/上海 (UTC+8)</option>
+                        <option value="Asia/Hong_Kong">亞洲/香港 (UTC+8)</option>
+                        <option value="America/New_York">美洲/紐約 (UTC-5)</option>
+                        <option value="America/Los_Angeles">美洲/洛杉磯 (UTC-8)</option>
+                        <option value="Europe/London">歐洲/倫敦 (UTC+0)</option>
+                        <option value="UTC">UTC</option>
+                    </select>
+                </div>
+            </div>
         <br>
         <div class="section-title">日期格式</div>
         <div class="radio-group">
@@ -205,6 +225,8 @@
       const showTime = document.getElementById('showTime').checked;
       const showWeekNum = document.getElementById('showWeekNum').checked;
       const showWeek = document.getElementById('showWeek').checked;
+              const showDate = document.getElementById('showDate').checked;
+        const timezone = document.getElementById('timezone').value;
 
       const params = new URLSearchParams();
       params.set('theme', theme);
@@ -212,6 +234,8 @@
       if (!showTime) params.set('time', 'false');
       if (!showWeekNum) params.set('weeknum', 'false');
       if (!showWeek) params.set('week', 'false');
+              if (!showDate) params.set('date', 'false');
+        if (timezone !== 'local') params.set('timezone', timezone);
 
       const url = `${baseURL}?${params.toString()}`;
       document.getElementById('preview').src = url;
@@ -234,6 +258,7 @@
     document.querySelectorAll('input').forEach(input => {
       input.addEventListener('change', updatePreview);
     });
+        document.getElementById('timezone').addEventListener('change', updatePreview);
 
     updatePreview();
   </script>
