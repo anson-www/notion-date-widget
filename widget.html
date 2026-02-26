@@ -93,7 +93,7 @@
       document.body.className = theme;
 
       if (!showTime) document.getElementById('row-time').style.display = 'none';
-      if (!showDay)  document.getElementById('row-day').style.display  = 'none';
+      if (!showWeek)  document.getElementById('row-day').style.display  = 'none';
       if (!showWNum) document.getElementById('row-week').style.display = 'none';
           if (!showDate) document.getElementById('row-date').style.display = 'none';
 
@@ -123,7 +123,7 @@
         const weekEl = document.getElementById('row-week');
         weekEl.innerText = cfg.showWeek ? `WEEK ${wn}  ·  ${weekFull[now.getDay()]}` : `WEEK ${wn}`;
       }
-      if (cfg.showDay && !cfg.showWNum) {
+      if (cfg.showWeek && !cfg.showWNum) {
         document.getElementById('row-day').innerText = weekFull[now.getDay()];
       } else {
         document.getElementById('row-day').style.display = 'none';
