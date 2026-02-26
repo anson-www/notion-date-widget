@@ -60,7 +60,9 @@
     .option {
       margin-bottom: 16px;
     }
-    .option:last-child { margin-bottom: 0; }
+    .option:last-child {
+      margin-bottom: 0;
+    }
     .option label {
       display: flex;
       align-items: center;
@@ -123,16 +125,9 @@
       font-size: 0.85rem;
       transition: all 0.2s;
     }
-    .copy-btn:hover {
-      background: #5568d3;
-      transform: translateY(-1px);
-    }
-    .copy-btn:active {
-      transform: translateY(0);
-    }
-    .copy-btn.copied {
-      background: #48bb78;
-    }
+    .copy-btn:hover { background: #5568d3; transform: translateY(-1px); }
+    .copy-btn:active { transform: translateY(0); }
+    .copy-btn.copied { background: #48bb78; }
   </style>
 </head>
 <body>
@@ -140,10 +135,11 @@
     <h1>🗓️ Notion Date Widget 設定產生器</h1>
     <p class="subtitle">自訂您的日期時鐘小工具，輕鬆嵌入 Notion 頁面</p>
 
-    <div class="section-title">⚙️ Widget 設定</div>
     <div class="split">
       <div class="section">
-        <div class="section-title">顯示內容</div>
+        <div class="section-title">⚙️ Widget 設定</div>
+
+        <div class="section-title" style="font-size:0.95rem; margin-bottom:12px;">顯示內容</div>
         <div class="option">
           <label><input type="checkbox" id="showTime" checked> 顯示時鐘</label>
         </div>
@@ -152,15 +148,12 @@
         </div>
         <div class="option">
           <label><input type="checkbox" id="showWeek" checked> 顯示星期幾（於週數後方）</label>
-                          </div>
-                <div class="option">
-                    <label><input type="checkbox" id="showDate" checked> 顯示日期</label>
-                </div>
         </div>
-      </div>
+        <div class="option">
+          <label><input type="checkbox" id="showDate" checked> 顯示日期</label>
+        </div>
 
-      <div class="section">
-        <div class="section-title">外觀設定</div>
+        <div class="section-title" style="font-size:0.95rem; margin-top:20px; margin-bottom:12px;">外觀設定</div>
         <div class="radio-group">
           <div class="option">
             <label><input type="radio" name="theme" value="auto" checked> 自動（跟隨系統）</label>
@@ -172,23 +165,23 @@
             <label><input type="radio" name="theme" value="dark"> 深色模式</label>
           </div>
         </div>
-        
-            <div class="section">
-                <div class="section-title">時區選擇</div>
-                    <select id="timezone" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
-                        <option value="local">本地時區</option>
-                        <option value="Asia/Taipei">亞洲/台北 (UTC+8)</option>
-                        <option value="Asia/Tokyo">亞洲/東京 (UTC+9)</option>
-                        <option value="Asia/Shanghai">亞洲/上海 (UTC+8)</option>
-                        <option value="Asia/Hong_Kong">亞洲/香港 (UTC+8)</option>
-                        <option value="America/New_York">美洲/紐約 (UTC-5)</option>
-                        <option value="America/Los_Angeles">美洲/洛杉磯 (UTC-8)</option>
-                        <option value="Europe/London">歐洲/倫敦 (UTC+0)</option>
-                        <option value="UTC">UTC</option>
-                    </select>
-            </div>
-        <br>
-        <div class="section-title">日期格式</div>
+
+        <div class="section-title" style="font-size:0.95rem; margin-top:20px; margin-bottom:12px;">時區選擇</div>
+        <select id="timezone" style="width:100%; padding:8px; border-radius:6px; border:1px solid #ddd;">
+          <option value="local">本地時區</option>
+          <option value="Asia/Taipei">亞洲/台北 (UTC+8)</option>
+          <option value="Asia/Tokyo">亞洲/東京 (UTC+9)</option>
+          <option value="Asia/Shanghai">亞洲/上海 (UTC+8)</option>
+          <option value="Asia/Hong_Kong">亞洲/香港 (UTC+8)</option>
+          <option value="America/New_York">美洲/紐約 (UTC-5)</option>
+          <option value="America/Los_Angeles">美洲/洛杉磯 (UTC-8)</option>
+          <option value="Europe/London">歐洲/倫敦 (UTC+0)</option>
+          <option value="UTC">UTC</option>
+        </select>
+
+        <br><br>
+
+        <div class="section-title" style="font-size:0.95rem; margin-bottom:12px;">日期格式</div>
         <div class="radio-group">
           <div class="option">
             <label><input type="radio" name="datestyle" value="ymd" checked> 2026 . 02 . 26</label>
@@ -201,17 +194,18 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="section-title">📱 即時預覽</div>
-    <div class="preview-box">
-      <iframe id="preview"></iframe>
-    </div>
-
-    <div class="section-title">🔗 嵌入連結</div>
-    <div class="output-box">
-      <button class="copy-btn" onclick="copyURL()">複製連結</button>
-      <code id="output"></code>
+      <div class="section">
+        <div class="section-title">📱 即時預覽</div>
+        <div class="preview-box">
+          <iframe id="preview" src=""></iframe>
+        </div>
+        <div class="section-title">🔗 嵌入連結</div>
+        <div class="output-box">
+          <button class="copy-btn" onclick="copyURL()">複製連結</button>
+          <span id="output"></span>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -224,8 +218,8 @@
       const showTime = document.getElementById('showTime').checked;
       const showWeekNum = document.getElementById('showWeekNum').checked;
       const showWeek = document.getElementById('showWeek').checked;
-              const showDate = document.getElementById('showDate').checked;
-        const timezone = document.getElementById('timezone').value;
+      const showDate = document.getElementById('showDate').checked;
+      const timezone = document.getElementById('timezone').value;
 
       const params = new URLSearchParams();
       params.set('theme', theme);
@@ -233,8 +227,8 @@
       if (!showTime) params.set('time', 'false');
       if (!showWeekNum) params.set('weeknum', 'false');
       if (!showWeek) params.set('week', 'false');
-              if (!showDate) params.set('date', 'false');
-        if (timezone !== 'local') params.set('timezone', timezone);
+      if (!showDate) params.set('date', 'false');
+      if (timezone !== 'local') params.set('timezone', timezone);
 
       const url = `${baseURL}?${params.toString()}`;
       document.getElementById('preview').src = url;
@@ -257,8 +251,7 @@
     document.querySelectorAll('input').forEach(input => {
       input.addEventListener('change', updatePreview);
     });
-        document.getElementById('timezone').addEventListener('change', updatePreview);
-
+    document.getElementById('timezone').addEventListener('change', updatePreview);
     updatePreview();
   </script>
 </body>
