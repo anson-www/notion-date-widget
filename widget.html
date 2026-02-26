@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notion Date Widget</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: transparent;
+      font-family: 'Helvetica Neue', 'PingFang TC', sans-serif;
+    }
+
+    .widget {
+      text-align: center;
+      padding: 16px 32px;
+      line-height: 1.7;
+    }
+
+    .row-week   { font-size: 0.85rem; letter-spacing: 0.18em; margin-bottom: 2px; }
+    .row-day    { font-size: 0.95rem; letter-spacing: 0.12em; margin-bottom: 4px; }
+    .row-date   { font-size: 1.6rem; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 2px; }
+    .row-time   { font-size: 2.5rem; font-weight: 300; letter-spacing: 0.1em; }
+
+    /* Light Mode */
+    body.light .row-week  { color: #b0aea9; }
+    body.light .row-day   { color: #9b9a97; }
+    body.light .row-date  { color: #37352f; }
+    body.light .row-time  { color: #37352f; }
+
+    /* Dark Mode */
+    body.dark .row-week   { color: #5c5b58; }
+    body.dark .row-day    { color: #787774; }
+    body.dark .row-date   { color: #e8e8e3; }
+    body.dark .row-time   { color: #e8e8e3; }
+
+    /* Auto Mode */
+    @media (prefers-color-scheme: light) {
+      body.auto .row-week  { color: #b0aea9; }
+      body.auto .row-day   { color: #9b9a97; }
+      body.auto .row-date  { color: #37352f; }
+      body.auto .row-time  { color: #37352f; }
+    }
+    @media (prefers-color-scheme: dark) {
+      body.auto .row-week  { color: #5c5b58; }
+      body.auto .row-day   { color: #787774; }
+      body.auto .row-date  { color: #e8e8e3; }
+      body.auto .row-time  { color: #e8e8e3; }
+    }
+  </style>
+</head>
+<body>
+  <div class="widget">
+    <div class="row-week" id="row-week"></div>
+    <div class="row-day"  id="row-day"></div>
+    <div class="row-date" id="row-date"></div>
+    <div class="row-time" id="row-time"></div>
+  </div>
+
+  <script>
+    const weekNums = ['日','一','二','三','四','五','六'];
+    const weekFull = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+    const months   = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    function getWeekNumber(d) {
+      const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+      const dayNum = date.getUTCDay() || 7;
+      date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+      const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+      return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+    }
+
+    function applyParams() {
+      const p = new URLSearchParams(window.location.search);
+      const theme   = p.get('theme')   || 'auto';
+      const showTime = p.get('time')   !== 'false';
+      const showDay  = p.get('day')    !== 'false';
+      const showWeek = p.get('week')   !== 'false';
+      const showWNum = p.get('weeknum')!== 'false';
+      const dateStyle= p.get('datestyle') || 'ymd';
+
+      document.body.className = theme;
+
+      if (!showTime) document.getElementById('row-time').style.display = 'none';
+      if (!showDay)  document.getElementById('row-day').style.display  = 'none';
+      if (!showWNum) document.getElementById('row-week').style.display = 'none';
+
+      return { showDay, showWeek, showWNum, showTime, dateStyle };
+    }
+
+    const cfg = applyParams();
+
+    function update() {
+      const now = new Date();
+      const y   = now.getFullYear();
+      const m   = String(now.getMonth() + 1).padStart(2, '0');
+      const d   = String(now.getDate()).padStart(2, '0');
+      const h   = String(now.getHours()).padStart(2, '0');
+      const min = String(now.getMinutes()).padStart(2, '0');
+      const s   = String(now.getSeconds()).padStart(2, '0');
+      const wn  = getWeekNumber(now);
+
+      let dateStr = '';
+      if (cfg.dateStyle === 'mdy')        dateStr = `${months[now.getMonth()]} ${d}, ${y}`;
+      else if (cfg.dateStyle === 'slash') dateStr = `${y} / ${m} / ${d}`;
+      else                                dateStr = `${y} . ${m} . ${d}`;
+
+      if (cfg.showWNum) {
+        const weekEl = document.getElementById('row-week');
+        weekEl.innerText = cfg.showWeek ? `WEEK ${wn}  ·  ${weekFull[now.getDay()]}` : `WEEK ${wn}`;
+      }
+      if (cfg.showDay && !cfg.showWNum) {
+        document.getElementById('row-day').innerText = weekFull[now.getDay()];
+      } else {
+        document.getElementById('row-day').style.display = 'none';
+      }
+
+      document.getElementById('row-date').innerText = dateStr;
+      if (cfg.showTime) document.getElementById('row-time').innerText = `${h} : ${min} : ${s}`;
+
+      setTimeout(update, 1000);
+    }
+
+    update();
+  </script>
+</body>
+</html>
