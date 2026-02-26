@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Notion Date Widget</title>
-      html { background: transparent !important; }
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -13,7 +12,7 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background: transparent;
+      background: #FFFFFF;
       font-family: 'Helvetica Neue', 'PingFang TC', sans-serif;
     }
 
@@ -29,12 +28,14 @@
     .row-time   { font-size: 2.5rem; font-weight: 300; letter-spacing: 0.1em; }
 
     /* Light Mode */
+        body.light { background: #FFFFFF; }
     body.light .row-week  { color: #b0aea9; }
     body.light .row-day   { color: #9b9a97; }
     body.light .row-date  { color: #37352f; }
     body.light .row-time  { color: #37352f; }
 
     /* Dark Mode */
+        body.dark { background: #191919; }
     body.dark .row-week   { color: #5c5b58; }
     body.dark .row-day    { color: #787774; }
     body.dark .row-date   { color: #e8e8e3; }
@@ -42,12 +43,14 @@
 
     /* Auto Mode */
     @media (prefers-color-scheme: light) {
+            body.auto { background: #FFFFFF; }
       body.auto .row-week  { color: #b0aea9; }
       body.auto .row-day   { color: #9b9a97; }
       body.auto .row-date  { color: #37352f; }
       body.auto .row-time  { color: #37352f; }
     }
     @media (prefers-color-scheme: dark) {
+            body.auto { background: #191919; }
       body.auto .row-week  { color: #5c5b58; }
       body.auto .row-day   { color: #787774; }
       body.auto .row-date  { color: #e8e8e3; }
