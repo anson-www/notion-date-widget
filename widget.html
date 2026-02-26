@@ -87,21 +87,26 @@
       const showWeek = p.get('week')   !== 'false';
       const showWNum = p.get('weeknum')!== 'false';
       const dateStyle= p.get('datestyle') || 'ymd';
+          const showDate = p.get('date') !== 'false';
+    const timezone = p.get('timezone') || 'local';
 
       document.body.className = theme;
 
       if (!showTime) document.getElementById('row-time').style.display = 'none';
       if (!showDay)  document.getElementById('row-day').style.display  = 'none';
       if (!showWNum) document.getElementById('row-week').style.display = 'none';
+          if (!showDate) document.getElementById('row-date').style.display = 'none';
 
-      return { showDay, showWeek, showWNum, showTime, dateStyle };
-    }
+    return { showDay, showWeek, showWNum, showTime, showDate, dateStyle, timezone };    }
 
     const cfg = applyParams();
 
     function update() {
-      const now = new Date();
-      const y   = now.getFullYear();
+    let now = new Date();
+    if (cfg.timezone !== 'local') {
+        const timeString = now.toLocaleString('en-US', { timeZone: cfg.timezone });
+        now = new Date(timeString);
+    }      const y   = now.getFullYear();
       const m   = String(now.getMonth() + 1).padStart(2, '0');
       const d   = String(now.getDate()).padStart(2, '0');
       const h   = String(now.getHours()).padStart(2, '0');
